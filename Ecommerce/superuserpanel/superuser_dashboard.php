@@ -11,7 +11,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'superuser') {
 <head>
     <meta charset="UTF-8">
     <title>Super-utilisateur - Tableau de Bord</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/index.css">
 </head>
 <body>
     <h1>Bienvenue, Super-utilisateur <?php echo $_SESSION['username']; ?>!</h1>

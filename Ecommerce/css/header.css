@@ -1,0 +1,271 @@
+/* Style de la page */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f3f4f6;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Conteneur principal */
+  .mobile-container {
+    margin: auto;
+    background-color: #444;
+    height: 500px;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+
+  .container {
+    width: 20%;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    position: relative;
+  }
+  
+  #toggle {
+    -webkit-appearance: none;
+  }
+  
+  .button {
+    position: absolute;
+    z-index: 999;
+    width: 320px;
+    height: 65px;
+    background: #04AA6D;
+    border-radius: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    padding: 0 24px;
+    overflow: hidden;
+    transition: width 300ms linear;
+  
+    &:before {
+      position: absolute;
+      content: "";
+      width: 20px;
+      height: 2px;
+      background: #eeff00;
+      transform: rotate(225deg);
+      transition: all 0.4s ease;
+    }
+    &:after {
+      position: absolute;
+      content: "";
+      width: 20px;
+      height: 2px;
+      background: #333;
+      transform: rotate(135deg);
+      transition: all 0.4s ease;
+    }
+  }
+  
+  .nav {
+    opacity: 1;
+    transition: all 0.5s ease-in-out;
+    background: red;
+    width: 100%;
+    border-radius: 5px;
+    transform: translateX(10%);
+    padding: 10px;
+  
+    ul {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: row;
+    }
+    li {
+      opacity: 0;
+      list-style: none;
+      &:nth-child(1) {
+        transform-origin: bottom;
+        animation: itop 300ms 300ms linear forwards;
+      }
+      &:nth-child(2) {
+        transform-origin: bottom;
+        animation: itop 300ms 400ms linear forwards;
+      }
+      &:nth-child(3) {
+        transform-origin: bottom;
+        animation: itop 300ms 500ms linear forwards;
+      }
+      &:nth-child(4) {
+        transform-origin: bottom;
+        animation: itop 300ms 600ms linear forwards;
+      }
+    }
+    a {
+      transition: all 0.5s linear;
+      text-decoration: none;
+      color: #eeff00;
+      font-size: 20px;
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 10px 0 0;
+      border-radius: 15px;
+  
+      &:hover {
+        color: aqua;
+        background: #04AA6D;
+        border-radius: 15px;
+      }
+    }
+  }
+  
+  #toggle:checked ~ label .nav {
+    display: none;
+    opacity: 0;
+    transform: translateX(0);
+  }
+  
+  #toggle:checked ~ .button:before {
+    transform: rotate(90deg);
+  }
+  
+  #toggle:checked ~ .button:after {
+    transform: rotate(0deg);
+  }
+  
+  #toggle:checked ~ .button {
+    width: 70px;
+    transition: all 0.1s linear;
+  }
+  
+  @media (max-width: 640px) {
+    .container {
+      width: 100%;
+    }
+  }
+  
+  @keyframes itop {
+    0% {
+      opacity: 0;
+      transform: translateY(60px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+
+
+  /* Barre de navigation */
+  .topnav {
+    overflow: hidden;
+    background-color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Logo */
+  .topnav .logo {
+    font-size: 20px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  /* Menu caché */
+  #myLinks {
+    display: none;
+    flex-direction: column;
+    background-color: #444;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 100%;
+  }
+  
+  /* Liens du menu */
+  #myLinks a {
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    border-bottom: 1px solid #555;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  
+  /* Liens de menu visibles quand le menu est ouvert */
+  #myLinks.open a {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Liens de navigation */
+  .topnav a {
+    color: white;
+    padding: 12px 20px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    border-radius: 5px;
+  }
+  
+  /* Liens et icônes de connexion à droite */
+  .menu-icons {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon,
+  .login {
+    color: white;
+    font-size: 20px;
+    margin-left: 15px;
+    transition: color 0.3s ease;
+  }
+  
+  /* Effet de survol */
+  .topnav a:hover {
+    background-color: #04AA6D;
+    color: #fff;
+  }
+  
+  /* Style pour le lien actif */
+  .active {
+    background-color: #04AA6D;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  /* Menu responsive */
+  @media screen and (max-width: 768px) {
+    .topnav a.icon {
+      display: inline-block;
+    }
+  
+    .topnav #myLinks {
+      display: flex;
+    }
+  }
+  
+  /* Transition d'ouverture du menu */
+  .topnav #myLinks a {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  
+  .topnav #myLinks.open a {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
