@@ -1,3 +1,12 @@
+:root {
+  --primary-color: #337ab7;
+  --secondary-color: #5bc0de;
+  --accent-color: #ff66c4;
+  --background-light: #f0f4ff;
+  --text-dark: #333;
+  --text-light: #fff;
+}
+
 body {
   font-family: 'Arial', sans-serif;
   background-color: #f0f4ff; /* Couleur de fond plus douce */

@@ -10,7 +10,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <!-- BootstrapDialog -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.35.4/css/bootstrap-dialog.min.css">
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.35.4/js/bootstrap-dialog.min.js"></script>
     <!-- Votre Script -->
     <script src="../js/script.js?v=<?php echo time(); ?>"></script>
@@ -191,6 +193,7 @@
                     <p class="TimeAndDate">XXX XX,XXXX XX:XX:XX XX</p>
                 </div>
                 <div class="pos_items_container">
+                <h1 style="text-align: center;">Gestion des Produits</h1>
                     <div class="pos_items">
                         <table class="table" id="pos_items_tbl">
                             <thead>
@@ -200,7 +203,7 @@
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     <th>Amount</th>
-                                    <th></th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -271,10 +274,12 @@
                     </div>
                 </div>
                 <div class="CheckoutBtnContainer">
-                    <a href="javascript:void(0);" class="checkoutbtn">CHECKOUT</a>
+                    <a href="javascript:void(0);" class="checkoutbtn">CHECKOUTs</a>
                 </div>
             </div>
         </div>
     </div>
+
+    
 </body>
 </html>
