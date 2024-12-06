@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POS Items Table</title>
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Bootstrap 3 CSS et JavaScript, car BootstrapDialog est conçu pour Bootstrap 3 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- BootstrapDialog -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.35.4/css/bootstrap-dialog.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.35.4/js/bootstrap-dialog.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         /* Style de base */
@@ -51,6 +62,58 @@
     </style>
 </head>
 <body>
+<div class="container">
+ <div class="row">
+<div class="col-md-1">1</div>
+ <div class="col-md-1">2</div>
+
+ <div class="col-md-1">3</div>
+ <div class="col-md-1">4</div>
+ <div class="col-md-1">5</div>
+ <div class="col-md-1">6</div>
+<div class="col-md-1">7</div>
+ <div class="col-md-1">8</div>
+ <div class="col-md-1">9</div>
+ <div class="col-md-1">10</div>
+ <div class="col-md-1">11</div>
+ <div class="col-md-1">12</div>
+ </div>
+ <div class="row">
+ <div class="col-md-8">1-8</div>
+ <div class="col-md-4">9-12</div>
+ </div>
+ <div class="row">
+ <div class="col-md-4">1-4</div>
+ <div class="col-md-4">5-8</div>
+<div class="col-md-4">9-12</div>
+ </div>
+ <div class="row">
+ <div class="col-md-6">1-6</div>
+ <div class="col-md-6">7-12</div>
+ </div>
+</div>
+<ul class="list-group">
+ <li class="list-group-item">First Element
+ <div class="btn-group">
+ <button type="button"
+ class="btn btn-default dropdown-toggle"
+ data-toggle="dropdown" aria-haspopup="true"
+ aria-expanded="false">
+ Aktion <span class="caret"></span>
+ </button>
+ <ul class="dropdown-menu">
+ <li><a href="#">Delete</a></li>
+ <li><a href="#">Move</a></li>
+ <li><a href="#">Rename</a></li>
+ <li role="separator" class="divider"></li>
+ <li><a href="#">Download</a></li>
+ </ul>
+ </div>
+ </li>
+ <li>... Other elements</li>
+ <li>... Other elements</li>
+ </ul>
+<img src="icon.jpg" onclick="alert('Hello')">
     <h1 style="text-align: center;">Gestion des Produits</h1>
     <table id="pos_items_tbl">
         <thead>
@@ -89,6 +152,7 @@
     </table>
 
     <script>
+        console.log("Hello");
         document.addEventListener("DOMContentLoaded", () => {
             // Gérer les boutons de mise à jour
             document.querySelectorAll(".update-btn").forEach((button) => {

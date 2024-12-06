@@ -323,6 +323,7 @@ section{
    width: 30rem;
    display: none;
    animation: fadeIn .2s linear;
+   z-index: 1000;
 }
 
 .header .header-2 .flex .user-box.active{
@@ -370,55 +371,252 @@ section{
    padding:1rem 0;
    line-height: 1.5;
 }
+/* General styles */
 
-.products .box-container{
-   max-width: 1200px;
-   margin:0 auto;
-   display: grid;
-   grid-template-columns: repeat(auto-fit, 30rem);
-   align-items: flex-start;
-   gap:1.5rem;
+
+
+/* Box container */
+.box-container {
+   padding: 20px;
+   display: flex;
+   flex-wrap: wrap;
    justify-content: center;
+   gap: 20px;
 }
 
-.products .box-container .box{
-   border-radius: .5rem;
-   background-color: var(--white);
-   box-shadow: var(--box-shadow);
-   padding:2rem;
-   text-align: center;
-   border:var(--border);
-   position: relative;
-}
-
-.products .box-container .box .image{
-   height: 30rem;
-}
-
-.products .box-container .box .name{
-   padding:1rem 0;
-   font-size: 2rem;
-   color:var(--black);
-}
-
-.products .box-container .box .qty{
+/* Product grid */
+.productColContainer {
+   background: #fff;
+   border-radius: 10px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   transition: transform 0.3s ease, box-shadow 0.3s ease;
+   overflow: hidden;
+   max-width: 300px;
    width: 100%;
-   padding:1.2rem 1.4rem;
-   border-radius: .5rem;
-   border:var(--border);
-   margin:1rem 0;
-   font-size: 2rem;
+   margin: 10px auto;
+   padding: 5px;
+   margin-bottom: 15px;
+   
+   
+   
 }
 
-.products .box-container .box .price{
-   position: absolute;
-   top:1rem; left:1rem;
-   border-radius: .5rem;
-   padding:1rem;
-   font-size: 2.5rem;
-   color:var(--white);
-   background-color: var(--red);
+.productColContainer:hover {
+   transform: translateY(-5px);
+   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
+
+
+/* Image styling with fixed dimensions */
+.ProductResultContainer img {
+   width: 100%;
+   height: 200px;
+   object-fit: cover;
+   display: block;
+   border-radius: 10px 10px 0 0;
+}
+
+/* Product information container */
+.ProductInfoContainer {
+   padding: -10px;
+   text-align: center;
+ 
+}
+
+/* Product name styling */
+.ProductName {
+   font-size: 1.2rem;
+   font-weight: bold;
+   margin: 5px 0;
+   color: #333;
+}
+
+/* Product price styling */
+.ProductPrice {
+   font-size: 1rem;
+   color: #4caf50;
+   margin: 10px 0;
+}
+
+/* Quantity input field */
+.qty {
+   width: 100%;
+   padding: 10px;
+   margin: 10px 0;
+   border-radius: 5px;
+   border: 1px solid #ccc;
+   text-align: center;
+   font-size: 1rem;
+}
+
+/* Buttons */
+.btn {
+   background-color: #4caf50;
+   color: white;
+   padding: 10px 15px;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   transition: background 0.3s ease;
+}
+.btn1 {
+   background-color: #4caf50;
+   color: white;
+   padding: 10px 15px;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   transition: background 0.3s ease;
+   position: relative;
+   top: -60px; /* Déplace le bouton vers le haut */
+}
+
+
+.btn:hover {
+   background-color: #45a049;
+}
+
+/* Search section */
+.SearchInputContainer input {
+   width: 100%;
+   padding: 10px;
+   margin-bottom: 20px;
+   border: 1px solid #ddd;
+   border-radius: 5px;
+   font-size: 1rem;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+/* Cart section */
+.posOrderContainer {
+   background: #fff;
+   border-radius: 10px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   padding: 20px;
+   max-height: 100%;
+   position: sticky;
+   top: 20px;
+}
+
+
+.pos_header {
+   background: #8ec5a0;
+   text-align: center;
+   padding: 15px;
+   border-radius: 8px;
+   margin-bottom: 20px;
+   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+ }
+ .pos_header .logo {
+   margin: 0 !important;
+   color: #3a87ad;
+   font-weight: bold;
+   font-size: 60px;
+ }
+ .pos_header .TimeAndDate {
+   color: #d9534f;
+   font-size: 17px;
+ }
+ .AlignRight {
+   text-align: right !important;
+ }
+ .setting a {
+   font-size: 38px;
+   margin-right: 13px;
+   color: #333;
+   transition: color 0.3s;
+ }
+ .setting a:hover {
+   color: #ff66c4;
+ }
+
+/* Cart table */
+.table {
+   width: 100%;
+   border-collapse: collapse;
+   margin-bottom: 20px;
+}
+
+.table th,
+.table td {
+   text-align: center;
+   padding: 10px;
+   border: 1px solid #ddd;
+}
+
+.table th {
+   background: #f4f4f4;
+}
+
+.items_total_container {
+   margin-top: 20px;
+   text-align: center;
+}
+
+.items_total_label {
+   font-size: 1.2rem;
+   font-weight: bold;
+   color: #333;
+}
+
+.item_total_value {
+   font-size: 1.2rem;
+   color: #4caf50;
+}
+
+/* Checkout button */
+.checkoutbtn {
+   display: block;
+   text-align: center;
+   background-color: #4caf50;
+   color: white;
+   text-decoration: none;
+   padding: 10px 15px;
+   border-radius: 5px;
+   font-weight: bold;
+   transition: background 0.3s ease;
+}
+
+.checkoutbtn:hover {
+   background-color: #45a049;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+   .row {
+       flex-direction: column;
+   }
+
+   .col-md-8,
+   .col-md-4 {
+       width: 100%;
+   }
+
+   .productColContainer {
+       max-width: 100%;
+   }
+}
+
+@media (max-width: 480px) {
+   .ProductName,
+   .ProductPrice {
+       font-size: 1rem;
+   }
+
+   .btn {
+       padding: 8px 12px;
+   }
+
+   .checkoutbtn {
+       font-size: 0.9rem;
+   }
+}
+
+
 
 .about .flex{
    max-width: 1200px;
@@ -980,3 +1178,82 @@ section{
 
 }
 
+
+/* Style the buttons */
+.btn-sm {
+   padding: 5px 10px; /* Adjust padding as needed */
+   font-size: 12px;
+}
+
+/* Align the buttons horizontally */
+td {
+   white-space: nowrap; /* Prevent wrapping of button content */
+}
+
+.btn-sm + .btn-sm {
+   margin-left: 5px; /* Add spacing between buttons */
+}
+
+.back-button {
+   background-color: #4caf50; /* Couleur de fond verte */
+   color: white; /* Couleur du texte */
+   padding: 10px 20px; /* Espacement interne pour agrandir le bouton */
+   border: none; /* Suppression des bordures */
+   border-radius: 25px; /* Coins arrondis */
+   cursor: pointer; /* Pointeur en main pour le survol */
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Légère ombre */
+   transition: all 0.3s ease; /* Transition fluide */
+   font-size: 16px; /* Taille du texte */
+   font-weight: bold; /* Texte en gras */
+}
+
+.back-button:hover {
+   background-color: #45a049; /* Couleur légèrement différente au survol */
+   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Augmente l'ombre au survol */
+   transform: scale(1.05); /* Effet de zoom */
+}
+
+.back-button a {
+   text-decoration: none; /* Supprime le soulignement du lien */
+   color: white; /* Assure que le texte reste blanc */
+   display: block; /* Rend le lien cliquable sur tout le bouton */
+}
+
+
+
+.alert-box {
+   position: fixed;
+   top: 20px;
+   right: 20px;
+   background: linear-gradient(90deg, #ff7e5f, #feb47b);
+   color: #fff;
+   padding: 15px 20px;
+   border-radius: 8px;
+   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   font-family: 'Arial', sans-serif;
+   font-size: 16px;
+   z-index: 1000;
+   opacity: 1;
+   transform: translateX(0);
+   transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+.alert-text {
+   flex-grow: 1;
+}
+
+.close-icon {
+   cursor: pointer;
+   font-size: 18px;
+   background: rgba(255, 255, 255, 0.3);
+   padding: 5px;
+   border-radius: 50%;
+   transition: background 0.3s ease;
+}
+
+.close-icon:hover {
+   background: rgba(255, 255, 255, 0.5);
+}
