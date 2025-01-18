@@ -44,14 +44,14 @@ if(isset($_GET['delete'])){
 </head>
 <body>
    
-
+<?php include 'admin_header.php'; ?>
 
 <section class="orders">
 
    <h1 class="title">placed orders</h1>
 
    <div class="box-container">
-      <?php include 'admin_header.php'; ?>
+      
       <?php
       $select_orders = mysqli_query($conn, "SELECT * FROM `orders`") or die('query failed');
       if(mysqli_num_rows($select_orders) > 0){

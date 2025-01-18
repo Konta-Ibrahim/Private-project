@@ -26,6 +26,7 @@ if(!isset($admin_id)){
    <!-- custom admin css file link  -->
    <link rel="stylesheet" href="css/admin_style.css">
 
+   
 </head>
 <body>
    
@@ -129,13 +130,6 @@ if(!isset($admin_id)){
 </section>
 
 <!-- admin dashboard section ends -->
-
-
-
-
-
-
-
 
 
 <!-- custom admin js file link  -->

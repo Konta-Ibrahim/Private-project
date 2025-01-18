@@ -50,5 +50,73 @@ document.addEventListener("DOMContentLoaded", function () {
       });
    });
 
+   document.getElementById('scanBarcode').addEventListener('click', function () {
+      const barcodeScanner = document.getElementById('barcode-scanner');
+      const videoElement = document.getElementById('video');
+      barcodeScanner.style.display = 'block';
+  
+      Quagga.init(
+          {
+              inputStream: {
+                  name: 'Live',
+                  type: 'LiveStream',
+                  target: videoElement,
+                  constraints: {
+                      facingMode: 'environment',
+                  },
+              },
+              decoder: {
+                  readers: ['code_128_reader', 'ean_reader', 'ean_8_reader'],
+              },
+          },
+          function (err) {
+              if (err) {
+                  console.error('Erreur lors de l\'initialisation :', err);
+                  return;
+              }
+              Quagga.start();
+          }
+      );
+  
+      Quagga.onDetected(function (result) {
+          const barcode = result.codeResult.code;
+          console.log('Code détecté :', barcode);
+  
+          // Envoyer au serveur pour traitement
+          fetch('add_product.php', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ barcode: barcode }),
+          })
+              .then((response) => response.json())
+              .then((data) => {
+                  if (data.success) {
+                      alert('Produit ajouté : ' + barcode);
+                  } else {
+                      alert('Erreur : ' + data.message);
+                  }
+                  Quagga.stop();
+                  barcodeScanner.style.display = 'none';
+              })
+              .catch((err) => {
+                  console.error('Erreur serveur :', err);
+                  Quagga.stop();
+                  barcodeScanner.style.display = 'none';
+              });
+      });
+  
+      document.getElementById('stopScan').addEventListener('click', function () {
+          Quagga.stop();
+          barcodeScanner.style.display = 'none';
+      });
+  });
+  
 
-   
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    sidebar.classList.toggle('collapsed');
+    mainContent.classList.toggle('expanded');
+ }

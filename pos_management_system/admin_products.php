@@ -7,119 +7,101 @@ $admin_id = $_SESSION['admin_id'];
 
 if (!isset($admin_id)) {
     header('location:login.php');
-}
-
-if (isset($_POST['update_product'])) {
-   $update_id = $_POST['update_id'];
-   $update_name = mysqli_real_escape_string($conn, $_POST['update_name']);
-   $update_price = $_POST['update_price'];
-
-   if (isset($_FILES['update_image']['name']) && $_FILES['update_image']['name'] != '') {
-       $update_image = $_FILES['update_image']['name'];
-       $update_image_tmp_name = $_FILES['update_image']['tmp_name'];
-       $update_image_folder = 'uploaded_img/' . $update_image;
-
-       // Supprimer l'ancienne image
-       $old_image = mysqli_query($conn, "SELECT image FROM `products` WHERE id = '$update_id'");
-       $old_image_data = mysqli_fetch_assoc($old_image);
-       unlink('uploaded_img/' . $old_image_data['image']);
-
-       // Mettre à jour avec nouvelle image
-       move_uploaded_file($update_image_tmp_name, $update_image_folder);
-       $update_query = "UPDATE `products` SET name = '$update_name', price = '$update_price', image = '$update_image' WHERE id = '$update_id'";
-   } else {
-       // Mise à jour sans changer l'image
-       $update_query = "UPDATE `products` SET name = '$update_name', price = '$update_price' WHERE id = '$update_id'";
-   }
-
-   mysqli_query($conn, $update_query) or die('query failed');
-   echo json_encode(['success' => true]);
-   exit;
+    exit;
 }
 
 // Ajouter un produit
 if (isset($_POST['add_product'])) {
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $price = $_POST['price'];
-    $stock = $_POST['stock']; // Nouvelle ligne
+    $stock = $_POST['stock'];
+    $barcode = mysqli_real_escape_string($conn, $_POST['barcode']);
     $image = $_FILES['image']['name'];
-    $image_size = $_FILES['image']['size'];
     $image_tmp_name = $_FILES['image']['tmp_name'];
-    $image_folder = 'uploaded_img/' . $image;
+    $image_folder = 'uploaded_img/' . basename($image);
 
-    $check_product = mysqli_query($conn, "SELECT name FROM `products` WHERE name = '$name'") or die('query failed');
+    if (!file_exists('uploaded_img')) {
+        mkdir('uploaded_img', 0777, true);
+    }
+
+    $check_product = mysqli_query($conn, "SELECT barcode FROM `products` WHERE barcode = '$barcode'") or die('Query failed');
     if (mysqli_num_rows($check_product) > 0) {
-        $message[] = 'Le produit existe déjà !';
+        $message[] = 'Le produit avec ce code-barres existe déjà !';
+    } elseif (!in_array(pathinfo($image, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png'])) {
+        $message[] = 'Veuillez télécharger une image valide (jpg, jpeg, png).';
+    } elseif ($_FILES['image']['size'] > 2000000) {
+        $message[] = 'La taille de l’image est trop grande.';
     } else {
-        if ($image_size > 2000000) {
-            $message[] = 'La taille de l’image est trop grande.';
-        } else {
-            move_uploaded_file($image_tmp_name, $image_folder);
-            mysqli_query($conn, "INSERT INTO `products`(name, price, stock, image) VALUES('$name', '$price', '$stock', '$image')") or die('query failed');
+        if (move_uploaded_file($image_tmp_name, $image_folder)) {
+            mysqli_query($conn, "INSERT INTO `products`(name, price, stock, image, barcode) VALUES('$name', '$price', '$stock', '$image', '$barcode')") or die('Query failed');
             $message[] = 'Produit ajouté avec succès !';
+        } else {
+            $message[] = 'Erreur lors du téléchargement de l’image.';
         }
     }
 }
 
-
-// Supprimer un produit
-if (isset($_GET['delete'])) {
-    $delete_id = $_GET['delete'];
-    $get_image = mysqli_query($conn, "SELECT image FROM `products` WHERE id = '$delete_id'") or die('query failed');
-    $image_data = mysqli_fetch_assoc($get_image);
-    unlink('uploaded_img/' . $image_data['image']);
-    mysqli_query($conn, "DELETE FROM `products` WHERE id = '$delete_id'") or die('query failed');
-    header('location:admin_products.php');
-}
-
-// Charger les données pour mise à jour
-$update_product_id = '';
-if (isset($_GET['update'])) {
-    $update_product_id = $_GET['update'];
-    $update_query = mysqli_query($conn, "SELECT * FROM `products` WHERE id = '$update_product_id'") or die('query failed');
-    if (mysqli_num_rows($update_query) > 0) {
-        $update_data = mysqli_fetch_assoc($update_query);
-    } else {
-        $update_product_id = '';
-    }
-}
-
-// Mettre à jour un produit
+// Modifier un produit
 if (isset($_POST['update_product'])) {
     $update_id = $_POST['update_id'];
     $update_name = mysqli_real_escape_string($conn, $_POST['update_name']);
     $update_price = $_POST['update_price'];
-    $update_stock = $_POST['update_stock']; // Nouvelle ligne
+    $update_stock = $_POST['update_stock'];
+    $update_barcode = mysqli_real_escape_string($conn, $_POST['update_barcode']);
 
-    $update_query = "UPDATE `products` SET name = '$update_name', price = '$update_price', stock = '$update_stock' WHERE id = '$update_id'";
+    mysqli_query($conn, "UPDATE `products` SET name='$update_name', price='$update_price', stock='$update_stock', barcode='$update_barcode' WHERE id='$update_id'") or die('Query failed');
 
     if (!empty($_FILES['update_image']['name'])) {
         $update_image = $_FILES['update_image']['name'];
         $update_image_tmp_name = $_FILES['update_image']['tmp_name'];
-        $update_image_folder = 'uploaded_img/' . $update_image;
-        $old_image = $_POST['old_image'];
-        unlink('uploaded_img/' . $old_image);
-        move_uploaded_file($update_image_tmp_name, $update_image_folder);
-        $update_query = "UPDATE `products` SET name = '$update_name', price = '$update_price', stock = '$update_stock', image = '$update_image' WHERE id = '$update_id'";
+        $update_image_folder = 'uploaded_img/' . basename($update_image);
+
+        $get_image = mysqli_query($conn, "SELECT image FROM `products` WHERE id = '$update_id'") or die('Query failed');
+        $image_data = mysqli_fetch_assoc($get_image);
+        $old_image_path = 'uploaded_img/' . $image_data['image'];
+        if (file_exists($old_image_path)) {
+            unlink($old_image_path);
+        }
+
+        if (move_uploaded_file($update_image_tmp_name, $update_image_folder)) {
+            mysqli_query($conn, "UPDATE `products` SET image='$update_image' WHERE id='$update_id'") or die('Query failed');
+        }
     }
 
-    mysqli_query($conn, $update_query) or die('query failed');
+    $message[] = 'Produit mis à jour avec succès !';
+}
+
+// Supprimer un produit
+if (isset($_GET['delete'])) {
+    $delete_id = $_GET['delete'];
+    $get_image = mysqli_query($conn, "SELECT image FROM `products` WHERE id = '$delete_id'") or die('Query failed');
+    if ($image_data = mysqli_fetch_assoc($get_image)) {
+        $image_path = 'uploaded_img/' . $image_data['image'];
+        if (file_exists($image_path)) {
+            unlink($image_path);
+        }
+    }
+    mysqli_query($conn, "DELETE FROM `products` WHERE id = '$delete_id'") or die('Query failed');
     header('location:admin_products.php');
+    exit;
+}
+
+// Recherche de produit
+$search_query = "";
+if (isset($_POST['search'])) {
+    $search_query = mysqli_real_escape_string($conn, $_POST['search_query']);
 }
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion Produits</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/admin_style.css">
 </head>
-
 <body>
 
 <?php include 'admin_header.php'; ?>
@@ -128,67 +110,81 @@ if (isset($_POST['update_product'])) {
     <h1 class="title">Gérer les Produits</h1>
 
     <!-- Formulaire d'ajout de produit -->
-    <div class="product-form">
-      <form action="" method="post" enctype="multipart/form-data">
+    <form action="" method="post" enctype="multipart/form-data">
         <h3>Ajouter un produit</h3>
-           <input type="text" name="name" class="box" placeholder="Nom du produit" required>
-           <input type="number" name="price" class="box" placeholder="Prix du produit" min="0" required>
-           <input type="number" name="stock" class="box" placeholder="Quantité en stock" min="0" required>
-           <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" class="box" required>
-           <button type="submit" name="add_product" class="btn">Ajouter</button>
-      </form>
+        <input type="text" name="name" class="box" placeholder="Nom du produit" required>
+        <input type="number" name="price" class="box" placeholder="Prix du produit" min="0" required>
+        <input type="number" name="stock" class="box" placeholder="Quantité en stock" min="0" required>
+        <input type="text" name="barcode" class="box" placeholder="Code-barres" required>
+        <input type="file" name="image" accept="image/jpg, image/jpeg, image/png" class="box" required>
+        <button type="submit" name="add_product" class="btn">Ajouter</button>
+    </form>
 
-    </div>
-
-    <!-- Formulaire de mise à jour (affiché si nécessaire) -->
-    <?php if (!empty($update_product_id)) { ?>
-        <div class="product-form update-form">
-            <form action="" method="post" enctype="multipart/form-data">
-                <h3>Mettre à jour le produit</h3>
-                <input type="hidden" name="update_id" value="<?php echo $update_data['id']; ?>">
-                <input type="hidden" name="old_image" value="<?php echo $update_data['image']; ?>">
-                <input type="number" name="update_stock" class="box" value="<?php echo $update_data['stock']; ?>" min="0" required>
-
-                <input type="text" name="update_name" class="box" value="<?php echo $update_data['name']; ?>" required>
-                <input type="number" name="update_price" class="box" value="<?php echo $update_data['price']; ?>" min="0" required>
-                <input type="file" name="update_image" accept="image/jpg, image/jpeg, image/png" class="box">
-                <button type="submit" name="update_product" class="btn">Mettre à jour</button>
-                <a href="admin_products.php" class="btn cancel-btn">Annuler</a>
-            </form>
-        </div>
-    <?php } ?>
+    <!-- Formulaire de recherche -->
+    <form action="" method="post" class="search-form">
+        <input type="text" name="search_query" class="box" placeholder="Rechercher un produit" value="<?php echo htmlspecialchars($search_query); ?>">
+        <button type="submit" name="search" class="btn">Rechercher</button>
+    </form>
 
     <!-- Liste des produits -->
     <div class="product-list">
         <h3>Produits disponibles</h3>
         <div class="box-container">
             <?php
-            $products = mysqli_query($conn, "SELECT * FROM `products`") or die('query failed');
+            $query = "SELECT * FROM `products`";
+            if (!empty($search_query)) {
+                $query .= " WHERE name LIKE '%$search_query%' OR barcode LIKE '%$search_query%'";
+            }
+            $products = mysqli_query($conn, $query) or die('Query failed');
             if (mysqli_num_rows($products) > 0) {
                 while ($product = mysqli_fetch_assoc($products)) {
                     ?>
                     <div class="box">
-                        <img src="uploaded_img/<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>">
+                        <img src="uploaded_img/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                         <div class="details">
-                            <h4><?php echo $product['name']; ?></h4>
-                            <p>Quantité en stock : <?php echo $product['stock']; ?></p>
-                            <p>Prix : <?php echo $product['price']; ?> €</p>
+                            <h4><?php echo htmlspecialchars($product['name']); ?></h4>
+                            <p>Quantité en stock : <?php echo htmlspecialchars($product['stock']); ?></p>
+                            <p>Prix : <?php echo htmlspecialchars($product['price']); ?> €</p>
                         </div>
                         <div class="actions">
-                            <a href="admin_products.php?update=<?php echo $product['id']; ?>" class="update-btn">Modifier</a>
-                            <a href="admin_products.php?delete=<?php echo $product['id']; ?>" class="delete-btn" onclick="return confirm('Supprimer ce produit ?');">Supprimer</a>
+                            <button onclick="openUpdateForm(<?php echo $product['id']; ?>, '<?php echo addslashes($product['name']); ?>', <?php echo $product['price']; ?>, <?php echo $product['stock']; ?>, '<?php echo addslashes($product['barcode']); ?>')" class="btn">Modifier</button>
+                            <a href="admin_products.php?delete=<?php echo $product['id']; ?>" class="btn" onclick="return confirm('Supprimer ce produit ?');">Supprimer</a>
                         </div>
                     </div>
-                <?php
+                    <?php
                 }
             } else {
-                echo '<p class="empty">Aucun produit ajouté.</p>';
+                echo '<p class="empty">Aucun produit trouvé.</p>';
             }
             ?>
         </div>
     </div>
+
+    <!-- Formulaire de mise à jour (caché par défaut) -->
+    <form action="" method="post" enctype="multipart/form-data" id="update-form" style="display:none;">
+        <h3>Modifier le produit</h3>
+        <input type="hidden" name="update_id" id="update-id">
+        <input type="text" name="update_name" id="update-name" class="box" placeholder="Nom du produit" required>
+        <input type="number" name="update_price" id="update-price" class="box" placeholder="Prix du produit" min="0" required>
+        <input type="number" name="update_stock" id="update-stock" class="box" placeholder="Quantité en stock" min="0" required>
+        <input type="text" name="update_barcode" id="update-barcode" class="box" placeholder="Code-barres" required>
+        <input type="file" name="update_image" accept="image/jpg, image/jpeg, image/png" class="box">
+        <button type="submit" name="update_product" class="btn">Mettre à jour</button>
+    </form>
+
 </section>
 
-<script src="js/admin_script.js"></script>
+<script>
+function openUpdateForm(id, name, price, stock, barcode) {
+    document.getElementById('update-id').value = id;
+    document.getElementById('update-name').value = name;
+    document.getElementById('update-price').value = price;
+    document.getElementById('update-stock').value = stock;
+    document.getElementById('update-barcode').value = barcode;
+    document.getElementById('update-form').style.display = 'block';
+    window.scrollTo(0, document.getElementById('update-form').offsetTop);
+}
+</script>
+
 </body>
 </html>
