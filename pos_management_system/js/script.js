@@ -339,3 +339,4 @@ function generateTicketNumber() {
 // Variable simulée pour le montant total
 const grandTotal = 150.00; // Exemple de montant total (à remplacer dynamiquement)
 
+
