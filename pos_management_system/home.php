@@ -143,9 +143,15 @@ if (isset($_POST['validate'])) {
             <div class="cart-container">
                 <div class="sous-panels">
                     <div class="item header">
+                    <div>
+    <!-- Bouton pour activer/désactiver le focus -->
+    <button id="toggle-focus" type="button">Désactiver le focus</button>
+</div>
+
                         <form action="" method="post" class="scanner-form">
                             <div id="qr-reader" style="width: 300px;"></div>
                             <input type="text" id="barcode" name="barcode" class="box" placeholder="Code-barres" required>
+                           
                             <button type="submit" name="add_to_invoice" class="btn">Ajouter au Panier</button>
 
                             

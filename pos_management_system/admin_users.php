@@ -16,6 +16,22 @@ if(isset($_GET['delete'])){
    header('location:admin_users.php');
 }
 
+if(isset($_POST['add_user'])){
+   $name = mysqli_real_escape_string($conn, $_POST['name']);
+   $email = mysqli_real_escape_string($conn, $_POST['email']);
+   $password = mysqli_real_escape_string($conn, md5($_POST['password']));
+   $user_type = $_POST['user_type'];
+
+   $check_email = mysqli_query($conn, "SELECT * FROM `users` WHERE email = '$email'") or die('query failed');
+
+   if(mysqli_num_rows($check_email) > 0){
+      $message[] = 'User with this email already exists!';
+   }else{
+      mysqli_query($conn, "INSERT INTO `users`(name, email, password, user_type) VALUES('$name', '$email', '$password', '$user_type')") or die('query failed');
+      $message[] = 'New user added successfully!';
+   }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -41,6 +57,19 @@ if(isset($_GET['delete'])){
 
    <h1 class="title"> user accounts </h1>
 
+   <!-- Add User Form -->
+   <form action="" method="post" class="add-user-form">
+      <h3>Add New User</h3>
+      <input type="text" name="name" placeholder="Enter username" class="box" required>
+      <input type="email" name="email" placeholder="Enter email" class="box" required>
+      <input type="password" name="password" placeholder="Enter password" class="box" required>
+      <select name="user_type" class="box" required>
+         <option value="user">User</option>
+         <option value="admin">Admin</option>
+      </select>
+      <input type="submit" name="add_user" value="Add User" class="btn">
+   </form>
+
    <div class="box-container">
       <?php
          $select_users = mysqli_query($conn, "SELECT * FROM `users`") or die('query failed');
@@ -59,13 +88,6 @@ if(isset($_GET['delete'])){
    </div>
 
 </section>
-
-
-
-
-
-
-
 
 
 <!-- custom admin js file link  -->

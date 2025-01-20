@@ -1,18 +1,9 @@
-<?php
-if (isset($message)) {
-    echo '<div class="alert-box">';
-    foreach ($message as $msg) {
-        echo '<span class="alert-text">' . $msg . '</span><br>';
-    }
-    echo '<i class="fas fa-times close-icon" onclick="this.parentElement.remove();"></i>';
-    echo '</div>';
-}
-?>
+
 <header class="header">
    <div class="header-2">
    <div class="flex">
     <div class="elliptical-buttons">
-        <a href="Clients.php" class="btn-ellipse">Clients</a>
+        <a href="customer_crud.php" class="btn-ellipse">Clients</a>
         <a href="archive.php" class="btn-ellipse">Archive</a>
         <a href="dette.php" class="btn-ellipse">dette</a>
         <a href="pos.php" class="btn-ellipse">POS</a>

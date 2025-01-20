@@ -1,16 +1,71 @@
 //lecteur automatise de qrcode
 
 const qrReader = new Html5Qrcode("qr-reader");
-qrReader.start({ facingMode: "environment" }, { fps: 10 }, (decodedText) => {
-    document.getElementById('barcode').value = decodedText; // Set the barcode field
-    // Automatically submit the form with a default quantity of 1
-    const quantityInput = document.createElement("input");
-    quantityInput.type = "hidden";
-    quantityInput.name = "quantity";
-    quantityInput.value = 1;  // Default quantity set to 1
-    document.forms[0].appendChild(quantityInput);  // Add quantity input to form
-    document.forms[0].submit();  // Automatically submit the form
-}); 
+const barcodeField = document.getElementById("barcode");
+const toggleFocusButton = document.getElementById("toggle-focus");
+const form = document.getElementById("barcode-form");
+let focusEnabled = true; // État initial : focus activé
+
+// Fonction pour gérer le scan et soumettre le formulaire
+function handleScan(decodedText) {
+    if (decodedText) {
+        barcodeField.value = decodedText; // Insérer le code scanné dans le champ
+        submitForm(decodedText); // Soumettre automatiquement le formulaire
+    }
+}
+
+// Fonction pour soumettre le formulaire via `fetch`
+function submitForm(barcode) {
+    const formData = new FormData();
+    formData.append("barcode", barcode);
+    formData.append("quantity", 1); // Quantité par défaut
+
+    fetch("home.php", {
+        method: "POST",
+        body: formData,
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Produit ajouté :", data.message);
+            barcodeField.value = ""; // Réinitialise le champ
+            if (focusEnabled) barcodeField.focus(); // Rétablit le focus si activé
+        })
+        .catch((error) => {
+            console.error("Erreur lors de la soumission :", error);
+        });
+}
+
+// Initialisation du lecteur QR avec la configuration nécessaire
+qrReader
+    .start(
+        { facingMode: "environment" },
+        { fps: 10 },
+        (decodedText) => {
+            handleScan(decodedText);
+        }
+    )
+    .catch((err) => {
+        console.error("Erreur de démarrage du lecteur QR :", err);
+    });
+
+// Gestion du focus initial
+document.addEventListener("DOMContentLoaded", () => {
+    if (focusEnabled) barcodeField.focus(); // Initialise le focus si activé
+});
+
+// Éviter que le champ perde le focus
+barcodeField.addEventListener("focusout", () => {
+    if (focusEnabled) barcodeField.focus(); // Rétablir le focus si activé
+});
+
+// Bouton pour activer/désactiver le focus
+toggleFocusButton.addEventListener("click", () => {
+    focusEnabled = !focusEnabled; // Bascule l'état
+    toggleFocusButton.textContent = focusEnabled
+        ? "Désactiver Focus"
+        : "Activer Focus"; // Met à jour le texte du bouton
+    if (focusEnabled) barcodeField.focus(); // Donne le focus immédiatement si activé
+});
 
  
 // Toggle dropdown visibility
